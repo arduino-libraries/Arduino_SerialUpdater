@@ -20,7 +20,7 @@
 #ifndef _BOSSAA_H
 #define _BOSSAA_H
 
-#include <HardwareSerial.h>
+#include "Arduino.h"
 #include "SerialPort.h"
 #include "Samba.h"
 #include "Flasher.h"

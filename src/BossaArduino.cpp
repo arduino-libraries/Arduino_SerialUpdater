@@ -26,6 +26,11 @@
 
 #include "BossaArduino.h"
 
+extern "C" void usleep(long i) {
+    delayMicroseconds(i);
+}
+
+
 int BossaArduino::connect(HardwareSerial& serial) {
 
     SerialPort::Ptr port(new BossacSerialPort("bossac", serial));
