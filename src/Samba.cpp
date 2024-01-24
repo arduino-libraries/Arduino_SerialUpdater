@@ -150,13 +150,18 @@ Samba::init()
 bool
 Samba::connect(SerialPort::Ptr port, int bps)
 {
+    
     _port = move(port);
 
     // Try to connect at a high speed if USB
     _isUsb = _port->isUsb();
     if (_isUsb)
     {
+        #ifdef ARDUINO_OPTA
+        if (_port->open(115200) && init())
+        #else
         if (_port->open(230400) && init())
+        #endif
         {
             if (_debug)
                 printf("Connected at 921600 baud\n");
