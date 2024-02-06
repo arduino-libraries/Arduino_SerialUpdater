@@ -26,7 +26,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ///////////////////////////////////////////////////////////////////////////////
-#include "Device.h"
+#include "BossaDevice.h"
 #include "EfcFlash.h"
 #include "EefcFlash.h"
 #include "D2xNvmFlash.h"
