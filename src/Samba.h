@@ -15,10 +15,10 @@
 //       names of its contributors may be used to endorse or promote products
 //       derived from this software without specific prior written permission.
 //
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-// ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-// WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-// DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
 // DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
 // (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
 // LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
@@ -29,93 +29,87 @@
 
 #ifndef _SAMBA_H
 #define _SAMBA_H
-
-#include <string>
-#include <stdint.h>
+#include "Arduino.h"
 #include <exception>
 #include <memory>
+#include <stdint.h>
+#include <string>
 
 #include "SerialPort.h"
 
-class SambaError : public std::exception
-{
+class SambaError : public std::exception {
 public:
-    SambaError() : exception() {};
-    const char* what() const throw() { return "SAM-BA operation failed"; }
+  SambaError() : exception(){};
+  const char *what() const throw() { return "SAM-BA operation failed"; }
 };
 
-
-
-class Samba
-{
+class Samba {
 public:
-    Samba();
-    virtual ~Samba();
+  Samba();
+  virtual ~Samba();
 
-    bool connect(SerialPort::Ptr port, int bps = 115200);
-    void disconnect();
+  bool connect(SerialPort::Ptr port, int bps = 115200);
+  void disconnect();
 
-    void writeByte(uint32_t addr, uint8_t value);
-    uint8_t readByte(uint32_t addr);
+  void writeByte(uint32_t addr, uint8_t value);
+  uint8_t readByte(uint32_t addr);
 
-    void writeWord(uint32_t addr, uint32_t value);
-    uint32_t readWord(uint32_t addr);
+  void writeWord(uint32_t addr, uint32_t value);
+  uint32_t readWord(uint32_t addr);
 
-    void write(uint32_t addr, const uint8_t* buffer, int size);
-    void read(uint32_t addr, uint8_t* buffer, int size);
+  bool write(uint32_t addr, const uint8_t *buffer, int size);
+  void read(uint32_t addr, uint8_t *buffer, int size);
 
-    void go(uint32_t addr);
+  void go(uint32_t addr);
 
-    std::string version();
+  std::string version();
 
-    void chipId(uint32_t& chipId, uint32_t& extChipId);
+  void chipId(uint32_t &chipId, uint32_t &extChipId);
 
-    void setDebug(bool debug) { _debug = debug; }
+  void setDebug(bool debug) { _debug = debug; }
 
-    const SerialPort& getSerialPort() { return *_port; }
+  const SerialPort &getSerialPort() { return *_port; }
 
-    // Extended SAM-BA functions
-    bool canChipErase() { return _canChipErase; }
-    void chipErase(uint32_t start_addr);
+  // Extended SAM-BA functions
+  bool canChipErase() { return _canChipErase; }
+  void chipErase(uint32_t start_addr);
 
-    bool canWriteBuffer() { return _canWriteBuffer; }
-    void writeBuffer(uint32_t src_addr, uint32_t dst_addr, uint32_t size);
-    uint32_t writeBufferSize() { return 4096; }
-    
-    bool canChecksumBuffer() { return _canChecksumBuffer; }
-    uint16_t checksumBuffer(uint32_t start_addr, uint32_t size);
-    uint32_t checksumBufferSize() { return 4096; }
-    uint16_t checksumCalc(uint8_t c, uint16_t crc);
+  bool canWriteBuffer() { return _canWriteBuffer; }
+  bool writeBuffer(uint32_t src_addr, uint32_t dst_addr, uint32_t size);
+  uint32_t writeBufferSize() { return 4096; }
 
-    bool canIdentifyChip() { return _canIdentifyChip; }
-    std::string identifyChip();
+  bool canChecksumBuffer() { return _canChecksumBuffer; }
+  uint16_t checksumBuffer(uint32_t start_addr, uint32_t size);
+  uint32_t checksumBufferSize() { return 4096; }
+  uint16_t checksumCalc(uint8_t c, uint16_t crc);
 
-    bool canReset() { return _canReset; }
-    void reset();
+  bool canIdentifyChip() { return _canIdentifyChip; }
+  std::string identifyChip();
+
+  bool canReset() { return _canReset; }
+  void reset();
 
 private:
-    bool _canChipErase;
-    bool _canWriteBuffer;
-    bool _canChecksumBuffer;
-    bool _canIdentifyChip;
-    bool _canReset;
-    int _readBufferSize;
-    bool _debug;
-    bool _isUsb;
-    SerialPort::Ptr _port;
+  bool _canChipErase;
+  bool _canWriteBuffer;
+  bool _canChecksumBuffer;
+  bool _canIdentifyChip;
+  bool _canReset;
+  int _readBufferSize;
+  bool _debug;
+  bool _isUsb;
+  SerialPort::Ptr _port;
 
-    bool init();
+  bool init();
 
-    uint16_t crc16Calc(const uint8_t *data, int len);
-    bool crc16Check(const uint8_t *blk);
-    void crc16Add(uint8_t *blk);
-    void writeXmodem(const uint8_t* buffer, int size);
-    void readXmodem(uint8_t* buffer, int size);
+  uint16_t crc16Calc(const uint8_t *data, int len);
+  bool crc16Check(const uint8_t *blk);
+  void crc16Add(uint8_t *blk);
+  void writeXmodem(const uint8_t *buffer, int size);
+  void readXmodem(uint8_t *buffer, int size);
 
-    void writeBinary(const uint8_t* buffer, int size);
-    void readBinary(uint8_t* buffer, int size);
-
+  void writeBinary(const uint8_t *buffer, int size);
+  void readBinary(uint8_t *buffer, int size);
 };
-
 
 #endif // _SAMBA_H

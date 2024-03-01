@@ -21,57 +21,67 @@
 #define _BOSSAA_H
 
 #include "Arduino.h"
-#include "SerialPort.h"
-#include "Samba.h"
 #include "Flasher.h"
+#include "Samba.h"
+#include "SerialPort.h"
 
-class BossacSerialPort : public SerialPort
-{
+class BossacSerialPort : public SerialPort {
 public:
-    BossacSerialPort(const std::string& name, HardwareSerial& serial) : SerialPort(name), _serial{&serial} {}
-    virtual ~BossacSerialPort() {}
+  BossacSerialPort(const std::string &name, HardwareSerial &serial)
+      : SerialPort(name), _serial{&serial} {}
+  virtual ~BossacSerialPort() {}
 
-    bool open(int baud, int data, Parity parity, StopBit stop) { _serial->begin(baud); return true; }
-    void close() {}
-    bool initcmd() { return true; }
-    bool endcmd() { return true; }
-    bool isUsb() { return true; }
-    int read(uint8_t* data, int size) { return _serial->readBytes(data,size); }
-    int write(const uint8_t* data, int size) { return _serial->write(data,size); }
-    int get() { return _serial->read(); }
-    int put(int c) { _serial->write(c); flush(); }
-    bool timeout(int millisecs) { _serial->setTimeout(millisecs); return true; }
-    void flush() { _serial->flush(); }
-    void setDTR(bool dtr) {}
-    void setRTS(bool rts) {}
+  bool open(int baud, int data, Parity parity, StopBit stop) {
+    _serial->begin(baud);
+    return true;
+  }
+  void close() {}
+  bool initcmd() { return true; }
+  bool endcmd() { return true; }
+  bool isUsb() { return true; }
+  int read(uint8_t *data, int size) { return _serial->readBytes(data, size); }
+  int write(const uint8_t *data, int size) {
+    return _serial->write(data, size);
+  }
+  int get() { return _serial->read(); }
+  int put(int c) {
+    _serial->write(c);
+    flush();
+    return 0;
+  }
+  bool timeout(int millisecs) {
+    _serial->setTimeout(millisecs);
+    return true;
+  }
+  void flush() { _serial->flush(); }
+  void setDTR(bool dtr) {}
+  void setRTS(bool rts) {}
 
 private:
-    HardwareSerial* _serial;
+  HardwareSerial *_serial;
 };
 
-class BossaArduinoObserver : public FlasherObserver
-{
+class BossaArduinoObserver : public FlasherObserver {
 public:
-    BossaArduinoObserver() {}
-    virtual ~BossaArduinoObserver() {}
+  BossaArduinoObserver() {}
+  virtual ~BossaArduinoObserver() {}
 
-    virtual void onStatus(const char *message, ...) { /* Print something on status change */ };
-    virtual void onProgress(int num, int div) { /* Print something on progress */ };
+  virtual void onStatus(const char *message,
+                        ...){/* Print something on status change */};
+  virtual void onProgress(int num, int div){/* Print something on progress */};
 };
 
-
-class BossaArduino
-{
+class BossaArduino {
 public:
-    BossaArduino(FlasherObserver& observer) : _observer(observer) {}
-    virtual ~BossaArduino() {}
+  BossaArduino(FlasherObserver &observer) : _observer(observer) {}
+  virtual ~BossaArduino() {}
 
-    virtual int connect(HardwareSerial& serial);
-    virtual void flash(const char* file_path);
+  virtual int connect(HardwareSerial &serial);
+  virtual void flash(const char *file_path);
 
 protected:
-    Samba _samba;
-    FlasherObserver& _observer;
+  Samba _samba;
+  FlasherObserver &_observer;
 };
 
 #endif
