@@ -68,9 +68,12 @@ public:
 
   virtual std::string name() const { return _name; }
 
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+
 #ifdef ARDUINO
   typedef std::auto_ptr<SerialPort> Ptr;
-#else typedef std::unique_ptr < SerialPort> Ptr;
+#else
+  typedef std::unique_ptr < SerialPort> Ptr;
 #endif
 
 protected:
